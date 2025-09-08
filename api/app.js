@@ -21,10 +21,6 @@ app.use("/api", (req, res, next) => {
   next();
 });
 
-app.get("/api/health", (_req, res) => {
-  res.json({ ok: true, ts: new Date().toISOString() });
-});
-
 app.use("/api", apiRouter);
 
 app.use((err, _req, res, _next) => {
