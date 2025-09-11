@@ -1,4 +1,9 @@
-import { notion, HAS_NOTION, NOTION_DB_ID } from "../services/notionClient.js";
+import {
+  notion,
+  HAS_NOTION,
+  NOTION_DB_ID,
+  ensureMultiSelectOptions,
+} from "../services/notionClient.js";
 import { mapNotionPageToProduct } from "../mappers/productMapper.js";
 import { resolvePeopleIds } from "../services/usersCache.js";
 
@@ -240,6 +245,22 @@ export async function createProduct(req, res) {
           }
         : {}),
     };
+
+    const { categories, brands } = req.body || {};
+
+    let categoriesProp = undefined;
+    let brandsProp = undefined;
+
+    if (Array.isArray(categories) && categories.length) {
+      const opts = await ensureMultiSelectOptions("Categories", categories);
+      properties["Categories"] = { multi_select: opts };
+    }
+
+    if (Array.isArray(brands) && brands.length) {
+      const opts = await ensureMultiSelectOptions("Brands", brands);
+      properties["Brands"] = { multi_select: opts };
+    }
+
     const page = await notion.pages.create({
       parent: { database_id: NOTION_DB_ID },
       properties,
