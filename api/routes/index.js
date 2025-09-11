@@ -5,7 +5,6 @@ import { healthRouter } from "./healthRoutes.js";
 
 const router = Router();
 
-router.use("/tasks", productsRouter);
 router.use("/users", usersRouter);
 router.use("/products", productsRouter);
 router.use("/health", healthRouter);
